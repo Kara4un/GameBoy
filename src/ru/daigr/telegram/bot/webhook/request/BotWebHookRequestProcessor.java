@@ -2,10 +2,10 @@ package ru.daigr.telegram.bot.webhook.request;
 
 import ru.daigr.network.http.server.HTTPRequest;
 import ru.daigr.network.http.server.HTTPResponse;
-import ru.daigr.network.http.server.IResponseProcessor;
+import ru.daigr.network.http.server.IRequestProcessor;
 import ru.daigr.telegram.bot.data.parse.IDataParser;
 
-public class BotWebHookRequestProcessor implements IResponseProcessor{
+public class BotWebHookRequestProcessor implements IRequestProcessor{
 	
 	IDataParser dataFactory;		
 	
@@ -14,7 +14,7 @@ public class BotWebHookRequestProcessor implements IResponseProcessor{
 	}
 
 	@Override
-	public HTTPResponse buildResponse(HTTPRequest aRequest) {
+	public HTTPResponse processRequest(HTTPRequest aRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
