@@ -12,5 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpmime-4.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/jna-4.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/jna-platform-4.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/json-20141113.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -20,4 +20,8 @@ public class GroupChat {
 	public String getTitle(){
 		return title;
 	}
+	
+	public static GroupChat defaultGroupChat(){
+		return new GroupChat(0);
+	}
 }

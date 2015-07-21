@@ -42,5 +42,9 @@ public class User {
 	public String getUserName() {
 		return userName;
 	}
+	
+	public static User defaultUser(){
+		return new User(0);
+	}
 
 }

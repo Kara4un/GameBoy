@@ -17,5 +17,9 @@ public class Update {
 	public Message getMessage(){
 		return message;
 	}
+	
+	public static Update defultUpdate(){
+		return new Update(0, Message.defaultMessage());
+	}
 
 }
