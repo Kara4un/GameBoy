@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/commons-codec-1.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/commons-logging-1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/fluent-hc-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpclient-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpclient-cache-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpclient-win-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpcore-4.4.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/httpmime-4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/jna-4.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
