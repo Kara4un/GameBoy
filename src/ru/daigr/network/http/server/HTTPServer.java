@@ -25,6 +25,8 @@ public class HTTPServer implements Runnable {
     private ServerSocketChannel server = ServerSocketChannel.open();
     private boolean isRunning = true;
     private boolean debug = true;
+    
+    private IResponseProcessor responseBuilder = null;
  
     /**
      * Create a new server and immediately binds it.
@@ -36,6 +38,20 @@ public class HTTPServer implements Runnable {
         server.socket().bind(address);
         server.configureBlocking(false);
         server.register(selector, SelectionKey.OP_ACCEPT);
+        
+        resetResponseBuilder();
+    }
+    
+    public void setResponseBuilder(IResponseProcessor aResponseBuilder){
+    	this.responseBuilder = aResponseBuilder;
+    }
+    
+    public void resetResponseBuilder() {
+    	responseBuilder = (request) -> {
+        	HTTPResponse response = new HTTPResponse();
+            response.setContent("I liek cates".getBytes());
+            return response;
+        };
     }
  
     /**
@@ -117,9 +133,7 @@ public class HTTPServer implements Runnable {
      * @return the handled request
      */
     protected HTTPResponse handle(HTTPSession session, HTTPRequest request) throws IOException {
-        HTTPResponse response = new HTTPResponse();
-        response.setContent("I liek cates".getBytes());
-        return response;
+        return responseBuilder.buildResponse(request);
     }
  
     /**
