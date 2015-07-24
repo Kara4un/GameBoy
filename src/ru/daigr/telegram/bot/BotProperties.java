@@ -5,9 +5,8 @@ public enum BotProperties {
 	VOID(""),
 	TELEGRAM_HOST("telegramHost"),
 	TOKEN("token"),
-	PERMANENT_CHAT_NAME("permanentChatName"),	
-	PERMANENT_CHAT_ID("permanentChatId"),
-	CHAT_TO_REPLY("chatToReply");
+	DONOR_ID_LIST("donorIdList"),
+	RECEPIENT_ID_LIST("recepientIdList");
 	
 	private String name;	
 	

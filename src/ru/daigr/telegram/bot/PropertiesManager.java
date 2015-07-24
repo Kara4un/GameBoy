@@ -52,4 +52,30 @@ public class PropertiesManager {
 		return props.getProperty(propertie.getName());
 	}
 	
+	public void setPropertie(BotProperties propertie, String value) {		 		
+	 
+		OutputStream output = null;		
+		try {
+	 
+			output = new FileOutputStream(rawFile);	 	
+			if (props.getProperty(propertie.getName()) == null){
+				props.setProperty(propertie.getName(), value);	 
+				props.store(output, null);
+			} else {
+				props.setProperty(propertie.getName(), value);
+			}				 				 
+		} catch (IOException io) {
+			io.printStackTrace();
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+	 
+		}
+	}
+	
 }

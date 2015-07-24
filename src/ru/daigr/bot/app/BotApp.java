@@ -30,7 +30,7 @@ public class BotApp {
 				
 		
 		BotApp app = new BotApp();
-		app.initLogger();
+		app.initLogger();				
 		
 		app.initBots(app.initPropertiesManager());
 		app.initWebHookProcessor();
@@ -43,7 +43,7 @@ public class BotApp {
 	public void initBots(PropertiesManager mgr){
 		bots = new ArrayList<>();
 		Bot gBot = new GameBoy(mgr);
-		Bot bBot = new BlahBot(mgr);
+		Bot bBot = new BlahBot(mgr, log4j);
 		bots.add(gBot);
 		bots.add(bBot);
 	}
@@ -62,7 +62,7 @@ public class BotApp {
 	public void initWebHookProcessor(){
 		log4j.info("Starting init requestProcessor with requestDataParser. \nRequestProcessor = " + 
 			BotWebHookRequestProcessor.class.getName() + "; \nData Parser = " + JSONDataParser.class.getName());
-		requestProcessor = new BotWebHookRequestProcessor(new JSONDataParser());
+		requestProcessor = new BotWebHookRequestProcessor(new JSONDataParser(), log4j);
 		for(Bot aBot : bots){
 			requestProcessor.addBot(aBot);
 			log4j.info("Adding bot : " + aBot.getClass().getName());
@@ -84,11 +84,16 @@ public class BotApp {
 		log4j.info("init Logger finished");
 	}
 	
-	public void run() throws Exception{
-		while (true) {
-			webHookServer.run();
-            Thread.sleep(100);
-        }
+	public void run(){
+		try {
+			while (true) {
+				webHookServer.run();
+	            Thread.sleep(100);
+	        }
+		} catch(Exception e){
+			log4j.error("Fatal Error");
+			log4j.error(e);
+		}
 	}
 
 }

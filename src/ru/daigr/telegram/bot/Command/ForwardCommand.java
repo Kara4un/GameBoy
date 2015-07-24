@@ -15,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
+import org.apache.logging.log4j.Logger;
 
 import ru.daigr.telegram.bot.data.Message;
 import ru.daigr.telegram.bot.data.Update;
@@ -49,7 +50,7 @@ public class ForwardCommand implements Command {
 		client = aClient;
 		hostName = aHostName;
 		botName = aBotName;
-		toChatId = aToChatId;
+		toChatId = aToChatId;				
 	}
 
 	@Override

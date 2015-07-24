@@ -26,6 +26,7 @@ public class GroupChat {
 	}
 	
 	public boolean equals(GroupChat chat) {
+		if (chat == null) return false;
 		return chat.getId() == id && title.equals(chat.getTitle()); 
 	}
 }
