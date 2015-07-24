@@ -1,5 +1,7 @@
 package ru.daigr.telegram.bot.data;
 
+import org.json.JSONObject;
+
 public class Update {
 	
 	private long id;
@@ -20,6 +22,6 @@ public class Update {
 	
 	public static Update defultUpdate(){
 		return new Update(0, Message.defaultMessage());
-	}
+	}		
 
 }

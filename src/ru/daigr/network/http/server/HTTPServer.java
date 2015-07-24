@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.apache.logging.log4j.Logger;
  
 public class HTTPServer implements Runnable {
  
@@ -26,6 +28,8 @@ public class HTTPServer implements Runnable {
     private boolean isRunning = true;
     private boolean debug = true;
     
+    private Logger logger = null;
+    
     private IRequestProcessor requestProcessor = null;
  
     /**
@@ -34,22 +38,28 @@ public class HTTPServer implements Runnable {
      * @param address the address to bind on
      * @throws IOException if there are any errors creating the server.
      */
-    protected HTTPServer(InetSocketAddress address) throws IOException {
+    public HTTPServer(InetSocketAddress address, Logger aLogger) throws IOException {
+    	
+        logger = aLogger;
+    	
+        logger.info("Init server on address " + address.getHostString());
         server.socket().bind(address);
         server.configureBlocking(false);
-        server.register(selector, SelectionKey.OP_ACCEPT);
+        server.register(selector, SelectionKey.OP_ACCEPT);        
         
-        resetResponseBuilder();
+        resetRequestProcessor();
     }
     
-    public void setResponseBuilder(IRequestProcessor aResponseBuilder){
-    	this.requestProcessor = aResponseBuilder;
+    public void setRequestProcessor(IRequestProcessor aRequestProcessor){
+    	logger.info("Setting request processor: " + aRequestProcessor.getClass().getName());
+    	this.requestProcessor = aRequestProcessor;
     }
     
-    public void resetResponseBuilder() {
+    public void resetRequestProcessor() {
+    	logger.info("reset request processor, now it's not implemented");
     	requestProcessor = (request) -> {
         	HTTPResponse response = new HTTPResponse();
-            response.setContent("I liek cates".getBytes());
+            response.setContent("Request pricessor not implemented".getBytes());
             return response;
         };
     }
@@ -76,7 +86,7 @@ public class HTTPServer implements Runnable {
                         if (key.isAcceptable()) {
                             // accept them
                             SocketChannel client = server.accept();
-                            // non blocking please
+                            // non blocking please                            
                             client.configureBlocking(false);
                             // show out intentions
                             client.register(selector, SelectionKey.OP_READ);
@@ -93,19 +103,17 @@ public class HTTPServer implements Runnable {
                             }
                             // get more data
                             session.readData();
-                            // decode the message
-                            String line;
-                            while ((line = session.readLine()) != null) {
-                                // check if we have got everything
-                                if (line.isEmpty()) {
-                                    HTTPRequest request = new HTTPRequest(session.readLines.toString());
-                                    session.sendResponse(handle(session, request));
-                                    session.close();
-                                }
-                            }
+                            // decode the message            
+                            logger.info("Process request: " + session.readLines.toString());
+                            HTTPRequest request = new HTTPRequest(session.readLines.toString());
+                            HTTPResponse r = handle(session, request);
+                            logger.info("Make response. The content is: " + r.getContent());
+                            session.sendResponse(r);
+                            session.close();
                         }
                     } catch (Exception ex) {
-                        System.err.println("Error handling client: " + key.channel());
+                        logger.error("Error handling client: " + key.channel());
+                        logger.error(ex);
                         if (debug) {
                             ex.printStackTrace();
                         } else {
@@ -119,6 +127,8 @@ public class HTTPServer implements Runnable {
                 }
             } catch (IOException ex) {
                 // call it quits
+            	logger.error(ex);
+            	logger.info("Shutdown server");
                 shutdown();
                 // throw it as a runtime exception so that Bukkit can handle it
                 throw new RuntimeException(ex);
@@ -153,47 +163,24 @@ public class HTTPServer implements Runnable {
  
         private final SocketChannel channel;
         private final ByteBuffer buffer = ByteBuffer.allocate(2048);
-        private final StringBuilder readLines = new StringBuilder();
-        private int mark = 0;
+        private final StringBuilder readLines = new StringBuilder();        
  
         public HTTPSession(SocketChannel channel) {
-            this.channel = channel;
-        }
- 
-        /**
-         * Try to read a line.
-         */
-        public String readLine() throws IOException {
-            StringBuilder sb = new StringBuilder();
-            int l = -1;
-            while (buffer.hasRemaining()) {
-                char c = (char) buffer.get();
-                sb.append(c);
-                if (c == '\n' && l == '\r') {
-                    // mark our position
-                    mark = buffer.position();
-                    // append to the total
-                    readLines.append(sb);
-                    // return with no line separators
-                    return sb.substring(0, sb.length() - 2);
-                }
-                l = c;
-            }
-            return null;
-        }
+            this.channel = channel;            
+        }            
  
         /**
          * Get more data from the stream.
          */
         public void readData() throws IOException {
             buffer.limit(buffer.capacity());
-            int read = channel.read(buffer);
+            int read = channel.read(buffer);           
             if (read == -1) {
                 throw new IOException("End of stream");
             }
-            buffer.flip();
-            buffer.position(mark);
-        }
+                    
+            readLines.append(new String(buffer.array()));
+        }                
  
         private void writeLine(String line) throws IOException {
             channel.write(encoder.encode(CharBuffer.wrap(line + "\r\n")));
@@ -207,7 +194,9 @@ public class HTTPServer implements Runnable {
                     writeLine(header.getKey() + ": " + header.getValue());
                 }
                 writeLine("");
-                channel.write(ByteBuffer.wrap(response.getContent()));
+                if (response.getContent() != null){
+                	channel.write(ByteBuffer.wrap(response.getContent()));
+                }                
             } catch (IOException ex) {
                 // slow silently
             }
@@ -219,13 +208,5 @@ public class HTTPServer implements Runnable {
             } catch (IOException ex) {
             }
         }
-    }        
- 
-    public static void main(String[] args) throws Exception {
-    	HTTPServer server = new HTTPServer(new InetSocketAddress(5555));
-        while (true) {
-            server.run();
-            Thread.sleep(100);
-        }
-    }
+    }            
 }

@@ -1,8 +1,11 @@
 package ru.daigr.telegram.bot;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 public class PropertiesManager {
@@ -11,7 +14,8 @@ public class PropertiesManager {
 	private String rawFile;
 	
 	public PropertiesManager (String fileName){
-		rawFile = fileName;		
+		rawFile = fileName;	
+		props = new Properties();
 	}
 	
 	public boolean initProps() {
@@ -28,17 +32,14 @@ public class PropertiesManager {
 	}
 	
 	
-	public void getPropValues(String propFileName) throws IOException {
-		InputStream inputStream = null; 
+	public void getPropValues(String propFileName) throws IOException {						
+		
+		FileInputStream inputStream = null; 
+		
 		try {					
  
-			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
- 
-			if (inputStream != null) {
-				props.load(inputStream);
-			} else {
-				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-			}
+			inputStream = new FileInputStream("./" + propFileName); 			
+			props.load(inputStream);
  			
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);

@@ -24,4 +24,8 @@ public class GroupChat {
 	public static GroupChat defaultGroupChat(){
 		return new GroupChat(0);
 	}
+	
+	public boolean equals(GroupChat chat) {
+		return chat.getId() == id && title.equals(chat.getTitle()); 
+	}
 }

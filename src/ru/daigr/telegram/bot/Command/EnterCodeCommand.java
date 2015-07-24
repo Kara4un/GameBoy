@@ -1,6 +1,6 @@
 package ru.daigr.telegram.bot.Command;
 
-import ru.daigr.telegram.bot.data.Message;
+import ru.daigr.telegram.bot.data.Update;
 
 public class EnterCodeCommand implements Command{
 	
@@ -15,7 +15,7 @@ public class EnterCodeCommand implements Command{
 	}
 
 	@Override
-	public boolean processCommand(Message message) {
+	public boolean processCommand(Update update) {
 		// TODO Auto-generated method stub
 		return false;
 	}

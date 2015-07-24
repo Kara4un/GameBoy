@@ -6,6 +6,7 @@ import ru.daigr.network.http.server.HTTPRequest;
 import ru.daigr.network.http.server.HTTPResponse;
 import ru.daigr.network.http.server.IRequestProcessor;
 import ru.daigr.telegram.bot.Bot;
+import ru.daigr.telegram.bot.data.Update;
 import ru.daigr.telegram.bot.data.parse.IDataParser;
 
 public class BotWebHookRequestProcessor implements IRequestProcessor{
@@ -32,8 +33,12 @@ public class BotWebHookRequestProcessor implements IRequestProcessor{
 	
 
 	@Override
-	public HTTPResponse processRequest(HTTPRequest aRequest) {		
-		return null;
+	public HTTPResponse processRequest(HTTPRequest aRequest) {	
+		Update update = dataFactory.parseUpdate(aRequest.getBody());
+		for (Bot aBot : bots){
+			aBot.processUpdate(update);
+		}
+		return new HTTPResponse();
 	}
 	
 

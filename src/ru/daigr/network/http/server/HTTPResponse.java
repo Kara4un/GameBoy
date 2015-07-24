@@ -16,7 +16,7 @@ public class HTTPResponse {
         headers.put("Date", new Date().toString());
         headers.put("Server", "Java Webserver by Kara4un");
         headers.put("Connection", "close");
-        headers.put("Content-Length", Integer.toString(content.length));
+        headers.put("Content-Length", Integer.toString(content != null ? content.length : 0));
     }
 
     public int getResponseCode() {

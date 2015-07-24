@@ -2,10 +2,10 @@ package ru.daigr.telegram.bot.data;
 
 public class User {
 	
-	public long id = 0;
-	public String firstName = "";
-	public String lastName = "";
-	public String userName = "";
+	private long id = 0;
+	private String firstName = "";
+	private String lastName = "";
+	private String userName = "";
 	
 	public User (long anId){
 		this.id = anId;

@@ -1,0 +1,9 @@
+2015-07-24 12:47:46,672 main INFO  app.BotApp - init Logger finished
+2015-07-24 12:47:46,673 main INFO  app.BotApp - Starting init propertiesManager. Props file name: config.properties
+2015-07-24 12:47:46,674 main INFO  app.BotApp - Succesfully finished. Props file name: config.properties
+2015-07-24 12:47:46,925 main INFO  app.BotApp - Starting init requestProcessor with requestDataParser. 
+RequestProcessor = ru.daigr.telegram.bot.webhook.request.BotWebHookRequestProcessor; 
+Data Parser = ru.daigr.telegram.bot.data.parse.json.JSONDataParser
+2015-07-24 12:47:46,951 main INFO  app.BotApp - Adding bot : ru.daigr.telegram.bot.GameBoy
+2015-07-24 12:47:46,951 main INFO  app.BotApp - Adding bot : ru.daigr.telegram.bot.BlahBot
+2015-07-24 12:47:46,951 main INFO  app.BotApp - Web hook processor init finished
