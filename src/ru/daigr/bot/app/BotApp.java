@@ -42,8 +42,9 @@ public class BotApp {
 	
 	public void initBots(PropertiesManager mgr){
 		bots = new ArrayList<>();
-		Bot gBot = new GameBoy(mgr);
+		Bot gBot = new GameBoy(mgr, log4j);
 		Bot bBot = new BlahBot(mgr, log4j);
+		gBot.processUpdate(null);
 		bots.add(gBot);
 		bots.add(bBot);
 	}
@@ -84,7 +85,7 @@ public class BotApp {
 		log4j.info("init Logger finished");
 	}
 	
-	public void run(){
+	public void run(){		
 		try {
 			while (true) {
 				webHookServer.run();
