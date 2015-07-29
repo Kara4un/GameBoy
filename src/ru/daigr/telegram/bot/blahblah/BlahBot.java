@@ -1,4 +1,4 @@
-package ru.daigr.telegram.bot;
+package ru.daigr.telegram.bot.blahblah;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
@@ -10,32 +10,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.Logger;
 
+import ru.daigr.telegram.bot.Bot;
+import ru.daigr.telegram.bot.BotProperties;
+import ru.daigr.telegram.bot.PropertiesManager;
 import ru.daigr.telegram.bot.Command.Command;
 import ru.daigr.telegram.bot.Command.ForwardCommand;
 import ru.daigr.telegram.bot.data.GroupChat;
 import ru.daigr.telegram.bot.data.Update;
 
-public class BlahBot implements Bot {
-	
-	public enum TelegramComands {
-				
-		ADD_AS_DONOR("/capture_on"),
-		DELETE_FROM_DONORS("/capture_off"),
-		ADD_AS_RECEPIENT("/translation_on"),
-		DELETE_RECEPIENT("/translation_off"),		
-		PHOTO_REPLY_COMMAND(""),
-		VOID_COMMAND("");
-		
-		private String command = "";
-		
-		private TelegramComands(String aCommand){
-			command = aCommand;
-		}
-		
-		public String getCommand(){
-			return command;
-		}
-	}
+public class BlahBot extends Bot {		
 	
 	private Predicate<String> isStrInvalid = (a) -> {
 		return a == null || a.isEmpty(); 
@@ -60,10 +43,10 @@ public class BlahBot implements Bot {
 			hostAddr = props.getPropertie(BotProperties.TELEGRAM_HOST);						
 						
 			if (!isStrInvalid.test(aProps.getPropertie(BotProperties.DONOR_ID_LIST))){
-				initIdsFromStr(aProps.getPropertie(BotProperties.DONOR_ID_LIST), chatsToForward);
+				initIdsFromStr(aProps.getPropertie(BotProperties.DONOR_ID_LIST), chatsFromForward);
 			}
 			if (!isStrInvalid.test(aProps.getPropertie(BotProperties.RECEPIENT_ID_LIST))){
-				initIdsFromStr(aProps.getPropertie(BotProperties.RECEPIENT_ID_LIST), chatsFromForward);
+				initIdsFromStr(aProps.getPropertie(BotProperties.RECEPIENT_ID_LIST), chatsToForward);
 			}
 		}						
 				
@@ -102,10 +85,11 @@ public class BlahBot implements Bot {
 				logger.info("Delete id from recepient chat list");
 				deleteFromRecepients(update);
 				return true;
-			}											
-		}	
-		
-		return false;
+			}
+			default:
+				logger.info("This is not command for BlahBot");
+				return false;										
+		}					
 	}		
 	
 	private boolean processPhotosForward(Update update){
@@ -173,18 +157,12 @@ public class BlahBot implements Bot {
 				update.getMessage().getChatUser().getId();
 				
 		chatsToForward.remove(new Long(id));
-		props.setPropertie(BotProperties.RECEPIENT_ID_LIST, arrayAsString(chatsFromForward));
+		props.setPropertie(BotProperties.RECEPIENT_ID_LIST, arrayAsString(chatsToForward));
 	}				
 	
-	private TelegramComands recognizeCommand(Update update){
-		if (update.getMessage() == null) return TelegramComands.VOID_COMMAND;
-		
-		String src = update.getMessage().getText();
-		if (!(src == null || src.isEmpty())){
-			for (TelegramComands command : TelegramComands.values()){
-				if (src.startsWith(command.getCommand())) return command;
-			}
-		}				
+	protected TelegramComands recognizeCommand(Update update){
+		TelegramComands cmd = super.recognizeCommand(update);
+		if (cmd != TelegramComands.VOID_COMMAND) return cmd;
 		
 		if (update.getMessage().getPhotoSize() != null &&
 				update.getMessage().getPhotoSize().length > 0){

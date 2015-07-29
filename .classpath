@@ -2,18 +2,19 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/commons-codec-1.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/fluent-hc-4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/httpclient-4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/httpclient-cache-4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/httpclient-win-4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/httpcore-4.4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/httpmime-4.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/jna-4.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/jna-platform-4.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/json-20141113.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/log4j-api-2.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Sergey Pimenov/workspace/game-boy/out/libs/log4j-core-2.3.jar"/>
+	<classpathentry kind="lib" path="out/libs/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="out/libs/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="out/libs/fluent-hc-4.5.jar"/>
+	<classpathentry kind="lib" path="out/libs/httpclient-4.5.jar"/>
+	<classpathentry kind="lib" path="out/libs/httpclient-cache-4.5.jar"/>
+	<classpathentry kind="lib" path="out/libs/httpclient-win-4.5.jar"/>
+	<classpathentry kind="lib" path="out/libs/httpcore-4.4.1.jar"/>
+	<classpathentry kind="lib" path="out/libs/httpmime-4.5.jar"/>
+	<classpathentry kind="lib" path="out/libs/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="out/libs/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="out/libs/json-20141113.jar"/>
+	<classpathentry kind="lib" path="out/libs/log4j-api-2.3.jar"/>
+	<classpathentry kind="lib" path="out/libs/log4j-core-2.3.jar"/>
+	<classpathentry kind="lib" path="out/libs/jsoup-1.8.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

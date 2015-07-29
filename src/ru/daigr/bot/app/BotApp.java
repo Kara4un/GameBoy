@@ -4,11 +4,13 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
 import ru.daigr.network.http.server.HTTPServer;
-import ru.daigr.telegram.bot.BlahBot;
 import ru.daigr.telegram.bot.Bot;
-import ru.daigr.telegram.bot.GameBoy;
+import ru.daigr.telegram.bot.BotProperties;
 import ru.daigr.telegram.bot.PropertiesManager;
+import ru.daigr.telegram.bot.blahblah.BlahBot;
 import ru.daigr.telegram.bot.data.parse.json.JSONDataParser;
+import ru.daigr.telegram.bot.gameboy.GameBoy;
+import ru.daigr.telegram.bot.hint.HintBot;
 import ru.daigr.telegram.bot.webhook.request.BotWebHookRequestProcessor;
 
 import org.apache.logging.log4j.Logger; 
@@ -43,19 +45,20 @@ public class BotApp {
 	public void initBots(PropertiesManager mgr){
 		bots = new ArrayList<>();
 		Bot gBot = new GameBoy(mgr, log4j);
-		Bot bBot = new BlahBot(mgr, log4j);
-		gBot.processUpdate(null);
+		Bot bBot = new BlahBot(mgr, log4j);	
+		Bot hBot = new HintBot(mgr, log4j);
+		bots.add(hBot);
 		bots.add(gBot);
 		bots.add(bBot);
 	}
 	
 	public void initServer() {
 		try {
-			webHookServer = new HTTPServer(new InetSocketAddress(443), log4j);
+			webHookServer = new HTTPServer(new InetSocketAddress(Integer.parseInt(mgr.getPropertie(BotProperties.TG_PORT))), log4j);
 			webHookServer.setRequestProcessor(requestProcessor);
 		} catch (IOException e) {
 			log4j.error("Could not init webHookServer");
-			log4j.error(e.getMessage(), e);
+			log4j.error(e); 
 			System.exit(FATAL_ERROR);
 		}			
 	}		

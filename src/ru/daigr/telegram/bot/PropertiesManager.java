@@ -63,7 +63,8 @@ public class PropertiesManager {
 				props.store(output, null);
 			} else {
 				props.setProperty(propertie.getName(), value);
-			}				 				 
+			}
+			props.store(output, "");
 		} catch (IOException io) {
 			io.printStackTrace();
 		} finally {

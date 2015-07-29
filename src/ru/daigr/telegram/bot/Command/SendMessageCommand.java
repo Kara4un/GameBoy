@@ -12,29 +12,24 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpParams;
-import org.apache.logging.log4j.Logger;
 
-import ru.daigr.telegram.bot.data.Message;
 import ru.daigr.telegram.bot.data.Update;
 
-public class ForwardCommand implements Command {
+public class SendMessageCommand implements Command {
 	
-	private static String METHOD = "forwardMessage";
+	private static String METHOD = "sendMessage";
 	private long toChatId = 0;
 	
-	private CloseableHttpClient client;
+	private HttpClient client;
 	private String hostName;
 	private String botName;
+	private String text;
 	
 	private enum Param {
-		CHAT_ID("chat_id"),
-		FROM_CHAT_ID("from_chat_id"),
-		MESSAGE_ID("message_id");
+		CHAT_ID("chat_id"),		
+		TEXT("text");
 		
 		private String name;
 		
@@ -47,18 +42,17 @@ public class ForwardCommand implements Command {
 		}
 	}
 	
-	public ForwardCommand(CloseableHttpClient aClient, String aHostName, 
-			String aBotName, long aToChatId){
+	public SendMessageCommand(HttpClient aClient, String aHostName, 
+			String aBotName, long aToChatId, String aText){
 		client = aClient;
 		hostName = aHostName;
 		botName = aBotName;
-		toChatId = aToChatId;				
+		toChatId = aToChatId;
+		text = aText;
 	}
 
 	@Override
-	public boolean processCommand(Update update) {				
-		
-		Message m = update.getMessage();
+	public boolean processCommand(Update update) {								
 		
 		HttpPost post = new HttpPost (hostName + "/"
 				+ botName + "/"
@@ -66,9 +60,7 @@ public class ForwardCommand implements Command {
 		
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair(Param.CHAT_ID.toString(), Long.toString(toChatId)));
-		urlParameters.add(new BasicNameValuePair(Param.FROM_CHAT_ID.toString(), 
-				Long.toString(m.isChat() ? m.getChat().getId() : m.getChatUser().getId())));
-		urlParameters.add(new BasicNameValuePair(Param.MESSAGE_ID.toString(), Long.toString(m.getMessage_id())));		
+		urlParameters.add(new BasicNameValuePair(Param.TEXT.toString(), text));			
 	 
 		try {
 			post.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -76,21 +68,15 @@ public class ForwardCommand implements Command {
 			e.printStackTrace();
 		}
 		
-		CloseableHttpResponse response = null;
+		HttpResponse response;
 		try {
-			response = client.execute(post);			
+			response = client.execute(post);
 		} catch (ClientProtocolException e) {			
 			e.printStackTrace();
 			return false;
 		} catch (IOException e) {			
 			e.printStackTrace();
 			return false;
-		} finally {
-			try {
-				if (response != null) response.close();
-			} catch (IOException e) {				
-				e.printStackTrace();
-			}
 		}
 		System.out.println("Response Code : " 
 	                + response.getStatusLine().getStatusCode());
@@ -119,6 +105,8 @@ public class ForwardCommand implements Command {
 		}
 		return true;
 	}
+	
+	
 		
 
 }
