@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import ru.daigr.network.http.server.HTTPServer;
 import ru.daigr.telegram.bot.Bot;
 import ru.daigr.telegram.bot.BotProperties;
+import ru.daigr.telegram.bot.MainBotProperties;
 import ru.daigr.telegram.bot.PropertiesManager;
 import ru.daigr.telegram.bot.blahblah.BlahBot;
 import ru.daigr.telegram.bot.data.parse.json.JSONDataParser;
@@ -54,7 +55,7 @@ public class BotApp {
 	
 	public void initServer() {
 		try {
-			webHookServer = new HTTPServer(new InetSocketAddress(Integer.parseInt(mgr.getPropertie(BotProperties.TG_PORT))), log4j);
+			webHookServer = new HTTPServer(new InetSocketAddress(Integer.parseInt(mgr.getPropertie(MainBotProperties.TG_PORT))), log4j);
 			webHookServer.setRequestProcessor(requestProcessor);
 		} catch (IOException e) {
 			log4j.error("Could not init webHookServer");

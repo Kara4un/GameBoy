@@ -7,7 +7,9 @@ public abstract class Bot {
 	public enum TelegramComands {				
 		
 		ENTER_CODE("/enter_code"),
-		GET_HINT("/get_hint"),
+		GET_LAST_HINT("/get_last_hint"),
+		SUBCRIBE("/subscribe"),
+		UNSUBSCRIBE("/unsubscribe"),
 		
 		ADD_AS_DONOR("/capture_on"),
 		DELETE_FROM_DONORS("/capture_off"),

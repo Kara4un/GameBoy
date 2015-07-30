@@ -54,20 +54,20 @@ public abstract class DzrBot extends Bot{
 	public DzrBot(PropertiesManager props, Logger aLogger) {
 		logger = aLogger;
 		if (props != null) {
-			token = props.getPropertie(BotProperties.TOKEN);
-			hostAddr = props.getPropertie(BotProperties.TELEGRAM_HOST);
+			token = props.getPropertie(DzrBotProperties.TOKEN);
+			hostAddr = props.getPropertie(MainBotProperties.TELEGRAM_HOST);
 
-			user = props.getPropertie(BotProperties.USER);
-			password = props.getPropertie(BotProperties.PASSWORD);
-			teamLogin = props.getPropertie(BotProperties.TEAM_LOGIN);
-			pin = props.getPropertie(BotProperties.PIN);
+			user = props.getPropertie(DzrBotProperties.USER);
+			password = props.getPropertie(DzrBotProperties.PASSWORD);
+			teamLogin = props.getPropertie(DzrBotProperties.TEAM_LOGIN);
+			pin = props.getPropertie(DzrBotProperties.PIN);
 
-			dzrHost = props.getPropertie(BotProperties.DZR_HOST);
-			dzrPort = props.getPropertie(BotProperties.DZR_PORT);
-			dzrMainPath = props.getPropertie(BotProperties.DZR_MAIN_PATH);
-			dzrReferer = props.getPropertie(BotProperties.DZR_REFERER);
-			dzrUserAgent = props.getPropertie(BotProperties.DZR_USER_AGENT);
-			allowedId = props.getPropertie(BotProperties.DZR_ALLOWED_CHAT_ID);								
+			dzrHost = props.getPropertie(DzrBotProperties.DZR_HOST);
+			dzrPort = props.getPropertie(DzrBotProperties.DZR_PORT);
+			dzrMainPath = props.getPropertie(DzrBotProperties.DZR_MAIN_PATH);
+			dzrReferer = props.getPropertie(DzrBotProperties.DZR_REFERER);
+			dzrUserAgent = props.getPropertie(DzrBotProperties.DZR_USER_AGENT);
+			allowedId = props.getPropertie(DzrBotProperties.DZR_ALLOWED_CHAT_ID);								
 		}
 
 		initClient();

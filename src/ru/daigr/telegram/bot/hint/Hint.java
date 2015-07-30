@@ -49,5 +49,33 @@ public class Hint {
 				&& aHint.getMissionNubmer().equals(missionNubmer);
 				
 	}
+	
+	public String toString(){
+		return gameName + ";"
+				+ missionNubmer + ";"
+				+ hintNumber + ";";
+	}
+	
+	public static Hint parseFromString(String src){
+		Hint ret = new Hint();
+		
+		String[] params = src.split(";");
+		if (params == null || params.length != 3){
+			return ret;
+		}
+		
+		ret.setGameName(params[0]);
+		ret.setMissionNubmer(params[1]);
+		ret.setHintNumber(params[2]);;
+		
+		return ret;
+	}	
+	
+	public String printHint(){
+		String ret = new String();
+		ret+=hintNumber + "\n";
+		ret+=hintText + "\n";
+		return ret;
+	}
 
 }

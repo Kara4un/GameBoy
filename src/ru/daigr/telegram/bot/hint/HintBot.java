@@ -3,52 +3,37 @@ package ru.daigr.telegram.bot.hint;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.Logger;
 
-import ru.daigr.telegram.bot.Bot;
-import ru.daigr.telegram.bot.BotProperties;
 import ru.daigr.telegram.bot.DzrBot;
 import ru.daigr.telegram.bot.PropertiesManager;
+import ru.daigr.telegram.bot.Command.SendMessageCommand;
+import ru.daigr.telegram.bot.blahblah.BlahBlahBotProperties;
 import ru.daigr.telegram.bot.data.Update;
-import ru.daigr.telegram.bot.gameboy.DzzzrResponseCodes;
 
-public class HintBot extends DzrBot {	
+public class HintBot extends DzrBot implements Runnable {	
 	
 	private DzzzrPageParser parser;
-	private Hint currentLastHint;	
+	private Hint currentLastHint;
+	private PropertiesManager props;
+	private ArrayList<Long> availableChats; 
 
-	public HintBot(PropertiesManager props, Logger aLogger) {
-		super(props,aLogger);
-		if (props != null) {					
-			parser = new DzzzrPageParser(props.getPropertie(BotProperties.NEED_AUTH_FLAG));
+	public HintBot(PropertiesManager aProps, Logger aLogger) {
+		super(aProps,aLogger);		
+		
+		if (aProps!=null) {
+			props = aProps;
+			parser = new DzzzrPageParser(props.getPropertie(HintBotProperties.NEED_AUTH_FLAG));
 			currentLastHint = new Hint();
-			currentLastHint.setGameName(props.getPropertie(BotProperties.LAST_HINT_GAME));
-			currentLastHint.setHintNumber(props.getPropertie(BotProperties.LAST_HINT_NUMBER));
-			currentLastHint.setMissionNubmer(props.getPropertie(BotProperties.LAST_HINT_MESSION));						
+			currentLastHint.setGameName(props.getPropertie(HintBotProperties.LAST_HINT_GAME));
+			currentLastHint.setHintNumber(props.getPropertie(HintBotProperties.LAST_HINT_NUMBER));
+			currentLastHint.setMissionNubmer(props.getPropertie(HintBotProperties.LAST_HINT_MESSION));						
 		}		
 	}
 
@@ -61,16 +46,8 @@ public class HintBot extends DzrBot {
 			return false;		
 
 		switch (recognizeCommand(update)) {		
-		case GET_HINT: {
-			try {
-					DzzzrResponseCodes respCode = getHint();					
-					return false;
-				} catch (UnsupportedEncodingException e) {
-					logger.error("We encounter a problem with encoding when entering code");
-					logger.error(e);
-					e.printStackTrace();
-				}
-				
+		case GET_LAST_HINT: {			
+					
 		}
 		default:
 			logger.info("This is not command for HintBot");
@@ -78,7 +55,7 @@ public class HintBot extends DzrBot {
 		}
 	}
 
-	private DzzzrResponseCodes getHint()
+	private Hint getHint()
 			throws UnsupportedEncodingException {					
 				
 		HttpGet httpGet = new HttpGet(dzrMainPath);
@@ -91,23 +68,22 @@ public class HintBot extends DzrBot {
 				CloseableHttpResponse response = httpClient.execute(target,
 						httpGet, localContext);				
 				if (response != null) {													
-					switch (response.getStatusLine().getStatusCode()) {
-						case 302 : {							
-							break;
-						}
+					switch (response.getStatusLine().getStatusCode()) {						
 						case 200 : {
 							String body = EntityUtils.toString(response.getEntity());
 							if (body == null) {
-								return DzzzrResponseCodes.DEFAULT;
+								return null;
 							} else if (parser.needAuth(body)){
-								makeAuthirization();
+								makeAuthirization();								
 							} else {
 								Hint hint = parser.parseLastHint(body);
+								if (hint != null && !hint.equals(currentLastHint)){
+									return hint;
+								} else {
+									return null;
+								}
 							}							
-						}
-						default : {
-							
-						}
+						}						
 					}
 					response.close();
 				}
@@ -122,8 +98,49 @@ public class HintBot extends DzrBot {
 				e.printStackTrace();			
 			}
 		}
+		return null;
+	}
 
-		return DzzzrResponseCodes.DEFAULT;
-	}		
+	@Override
+	public void run() {
+		
+		while (true) {			
+			try {
+				Thread.sleep(1000);
+				
+				Hint current;				
+				current = getHint();
+				if (!current.equals(currentLastHint)){
+					currentLastHint = current;
+					for (long l : availableChats){
+						SendMessageCommand scmd = new SendMessageCommand(
+								HttpClients.createDefault(), hostAddr, token, l,
+								currentLastHint.printHint());
+						scmd.processCommand(null);
+					}					
+				}
+			} catch (InterruptedException e) {
+				logger.error("Interrupted exception");
+				logger.error(e);
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				logger.error("UnsupportedEncodingException exception while getting hint");
+				logger.error(e);
+				e.printStackTrace();
+			}			
+		}		
+	}
+	
+	private void subscribe(Update update){
+		if (update.getMessage() == null) return;
+		long id = update.getMessage().isChat() ? 
+				update.getMessage().getChat().getId() :
+				update.getMessage().getChatUser().getId();		
+		for (Long l : availableChats){
+			if (l == id) return;
+		}			
+		availableChats.add(id);
+		props.setPropertie(BlahBlahBotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
+	}
 
 }

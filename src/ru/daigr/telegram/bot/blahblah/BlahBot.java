@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import ru.daigr.telegram.bot.Bot;
 import ru.daigr.telegram.bot.BotProperties;
+import ru.daigr.telegram.bot.MainBotProperties;
 import ru.daigr.telegram.bot.PropertiesManager;
 import ru.daigr.telegram.bot.Command.Command;
 import ru.daigr.telegram.bot.Command.ForwardCommand;
@@ -39,14 +40,14 @@ public class BlahBot extends Bot {
 		logger = aLogger;
 		
 		if (props != null){
-			botName = props.getPropertie(BotProperties.TOKEN);
-			hostAddr = props.getPropertie(BotProperties.TELEGRAM_HOST);						
+			botName = props.getPropertie(BlahBlahBotProperties.TOKEN);
+			hostAddr = props.getPropertie(MainBotProperties.TELEGRAM_HOST);						
 						
-			if (!isStrInvalid.test(aProps.getPropertie(BotProperties.DONOR_ID_LIST))){
-				initIdsFromStr(aProps.getPropertie(BotProperties.DONOR_ID_LIST), chatsFromForward);
+			if (!isStrInvalid.test(aProps.getPropertie(BlahBlahBotProperties.DONOR_ID_LIST))){
+				initIdsFromStr(aProps.getPropertie(BlahBlahBotProperties.DONOR_ID_LIST), chatsFromForward);
 			}
-			if (!isStrInvalid.test(aProps.getPropertie(BotProperties.RECEPIENT_ID_LIST))){
-				initIdsFromStr(aProps.getPropertie(BotProperties.RECEPIENT_ID_LIST), chatsToForward);
+			if (!isStrInvalid.test(aProps.getPropertie(BlahBlahBotProperties.RECEPIENT_ID_LIST))){
+				initIdsFromStr(aProps.getPropertie(BlahBlahBotProperties.RECEPIENT_ID_LIST), chatsToForward);
 			}
 		}						
 				
@@ -122,7 +123,7 @@ public class BlahBot extends Bot {
 			if (l == id) return;
 		}			
 		chatsFromForward.add(id);
-		props.setPropertie(BotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
+		props.setPropertie(BlahBlahBotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
 	}
 	
 	private void addAsRecepient(Update update){
@@ -137,7 +138,7 @@ public class BlahBot extends Bot {
 			if (l == id) return;
 		}			
 		chatsToForward.add(id);
-		props.setPropertie(BotProperties.RECEPIENT_ID_LIST, arrayAsString(chatsToForward));
+		props.setPropertie(BlahBlahBotProperties.RECEPIENT_ID_LIST, arrayAsString(chatsToForward));
 	}
 	
 	private void deleteFromDonors(Update update){
@@ -147,7 +148,7 @@ public class BlahBot extends Bot {
 				update.getMessage().getChatUser().getId();
 				
 		chatsFromForward.remove(new Long(id));
-		props.setPropertie(BotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
+		props.setPropertie(BlahBlahBotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
 	}
 	
 	private void deleteFromRecepients(Update update){
@@ -157,7 +158,6 @@ public class BlahBot extends Bot {
 				update.getMessage().getChatUser().getId();
 				
 		chatsToForward.remove(new Long(id));
-		props.setPropertie(BotProperties.RECEPIENT_ID_LIST, arrayAsString(chatsToForward));
 	}				
 	
 	protected TelegramComands recognizeCommand(Update update){
