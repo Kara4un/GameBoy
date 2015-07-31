@@ -29,11 +29,13 @@ public class HintBot extends DzrBot implements Runnable {
 		
 		if (aProps!=null) {
 			props = aProps;
+			token = props.getPropertie(HintBotProperties.TOKEN);
 			parser = new DzzzrPageParser(props.getPropertie(HintBotProperties.NEED_AUTH_FLAG));
 			currentLastHint = new Hint();
 			currentLastHint.setGameName(props.getPropertie(HintBotProperties.LAST_HINT_GAME));
 			currentLastHint.setHintNumber(props.getPropertie(HintBotProperties.LAST_HINT_NUMBER));
-			currentLastHint.setMissionNubmer(props.getPropertie(HintBotProperties.LAST_HINT_MESSION));						
+			currentLastHint.setMissionNubmer(props.getPropertie(HintBotProperties.LAST_HINT_MESSION));
+			initIdsFromStr(props.getPropertie(HintBotProperties.ALLOWED_CHATS), availableChats);
 		}		
 	}
 
@@ -44,10 +46,22 @@ public class HintBot extends DzrBot implements Runnable {
 			return false;
 		if (update.getMessage() == null)
 			return false;		
-
 		switch (recognizeCommand(update)) {		
-		case GET_LAST_HINT: {			
-					
+		case GET_LAST_HINT: {					
+			long id = update.getMessage().isChat() ? update.getMessage().getChat()
+					.getId() : update.getMessage().getChatUser().getId();
+			logger.info("Sending last hint to id: " + id);
+			logger.info("hint is: " + currentLastHint.printHint());
+			SendMessageCommand scmd = new SendMessageCommand(
+					HttpClients.createDefault(), hostAddr, token,id,
+					currentLastHint.printHint());
+			scmd.processCommand(null);
+		}
+		case SUBCRIBE: {
+			subscribe(update);
+		}
+		case UNSUBSCRIBE: {
+			unsubscribe(update);
 		}
 		default:
 			logger.info("This is not command for HintBot");
@@ -140,7 +154,36 @@ public class HintBot extends DzrBot implements Runnable {
 			if (l == id) return;
 		}			
 		availableChats.add(id);
-		props.setPropertie(BlahBlahBotProperties.DONOR_ID_LIST, arrayAsString(chatsFromForward));
+		props.setPropertie(HintBotProperties.ALLOWED_CHATS, arrayAsString(availableChats));
+	}
+	
+	private void unsubscribe(Update update){
+		if (update.getMessage() == null) return;
+		long id = update.getMessage().isChat() ? 
+				update.getMessage().getChat().getId() :
+				update.getMessage().getChatUser().getId();		
+		for (Long l : availableChats){
+			if (l == id) return;
+		}			
+		availableChats.remove(id);
+		props.setPropertie(HintBotProperties.ALLOWED_CHATS, arrayAsString(availableChats));
+	}
+	
+	private void initIdsFromStr(String str, ArrayList<Long> list){
+		String[] src = str.split(";");
+		for (String s : src){
+			if (s == null || s.isEmpty()) continue;
+			list.add(Long.parseLong(s));
+		}
+	}
+	
+	private String arrayAsString(ArrayList<Long> list){
+		String ret = "";
+		
+		for (Long l : list){
+			ret+=l + ";";
+		}
+		return ret;
 	}
 
 }

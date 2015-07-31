@@ -5,6 +5,7 @@ import ru.daigr.telegram.bot.BotProperties;
 public enum HintBotProperties implements BotProperties{ 
 
 	NEED_AUTH_FLAG("needAuthFlag"),
+	ALLOWED_CHATS("lastHintChats"),
 	
 	TOKEN("hintToken"),	
 	

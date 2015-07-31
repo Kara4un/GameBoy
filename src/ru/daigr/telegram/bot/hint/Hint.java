@@ -74,7 +74,12 @@ public class Hint {
 	public String printHint(){
 		String ret = new String();
 		ret+=hintNumber + "\n";
-		ret+=hintText + "\n";
+		if (hintText == null || hintText.isEmpty()){
+			ret+="Текст подсказки недоступен";
+		} else {
+			ret+=hintText + "\n";
+		}
+		
 		return ret;
 	}
 

@@ -28,13 +28,20 @@ public class GameBoy extends DzrBot {
 		super(props, aLogger);
 	}
 
-	public boolean processUpdate(Update update) {
-
-		logger.info(this.getClass().getName() + " GameBot processing update");
-		if (update == null)
-			return false;
+	public boolean processUpdate(Update update) {				
+		if (update == null) return false;
 		if (update.getMessage() == null)
-			return false;		
+			return false;
+		
+		long id = update.getMessage().isChat() ? update.getMessage().getChat()
+				.getId() : update.getMessage().getChatUser().getId();
+				
+		if (Long.toString(id) != allowedId) {
+			logger.info("Trying to make update from not allowed ID");
+			logger.info("ID = " + id);
+			return false; 
+		}
+		logger.info(this.getClass().getName() + " GameBot processing update");		
 
 		switch (recognizeCommand(update)) {
 		case VOID_COMMAND: {
@@ -44,9 +51,7 @@ public class GameBoy extends DzrBot {
 		case ENTER_CODE: {
 			Message msg = update.getMessage();
 			String rawText = msg.getText();
-			
-			long id = update.getMessage().isChat() ? update.getMessage().getChat()
-					.getId() : update.getMessage().getChatUser().getId();
+						
 			if (!Long.toString(id).equals(allowedId)) {
 				logger.info("Trying to make command from Id = " + id
 						+ " - it's not allowed");
